@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Library of Alexandria</string>
+    <!-- Book characteristics-->
+    <string name="book_name">Title</string>
+    <string name="book_ISBN">ISBN</string>
+    <string name="book_author">Author</string>
+    <string name="book_publisher">Publisher</string>
+    <string name="book_edition">Edition</string>
+    <string name="book_publication_year">Year of Publication</string>
+    <string name="book_description">Description</string>
+    <string name="book_genre">Genre</string>
+    <!-- Button labels -->
+    <string name="create_book">Create New Book</string>
+    <string name="search_book">Search</string>
+    <string name="add_book">Add Book</string>
+    <string name="list_book">Book List</string>
+</resources>

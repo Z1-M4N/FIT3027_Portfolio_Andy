@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Confirm, should appear as action button -->
+    <item
+        android:id="@+id/confirmBookAction"
+        android:icon="@drawable/ic_check_white_24dp"
+        android:title="@string/add_book"
+        app:showAsAction="ifRoom" />
+</menu>
