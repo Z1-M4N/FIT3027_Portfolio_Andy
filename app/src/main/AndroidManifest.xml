@@ -20,7 +20,10 @@
             android:name=".AddBookActivity"
             android:label="Add Book">
         </activity>
-        <activity android:name=".BooklistActivity"></activity>
+        <activity android:name=".BooklistActivity">
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"></meta-data>
+        </activity>
     </application>
 
 </manifest>

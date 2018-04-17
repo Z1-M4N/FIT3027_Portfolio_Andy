@@ -1,5 +1,7 @@
 package monash.zi.fit3027_portfolio_andy;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +11,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 
-public class BooklistActivity extends AppCompatActivity {
+public class BooklistActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     FloatingActionButton addBookFAB;
 
     // Unique Identifier for receiving activity result
@@ -21,6 +24,7 @@ public class BooklistActivity extends AppCompatActivity {
     private ListView listView;
     private BookAdapter adapter;
     private ArrayList<Book> bookArrayList;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,14 @@ public class BooklistActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_booklist_actions, menu);
+
+        SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchItem = menu.findItem(R.id.searchBookAction);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -90,5 +102,16 @@ public class BooklistActivity extends AppCompatActivity {
         // Get total size of person list & set title
         int numPeople = bookArrayList.size();
         setTitle("Number of Books: " + numPeople);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        adapter.getFilter().filter(s);
+        return true;
     }
 }
