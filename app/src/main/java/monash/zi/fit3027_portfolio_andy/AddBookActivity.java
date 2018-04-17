@@ -22,8 +22,6 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     EditText bookGenreText;
     EditText bookDescriptionText;
 
-    FloatingActionButton createBookButton;
-
     Book newBook;
 
     @Override
@@ -86,14 +84,14 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
                 newBook.setBookGenre(bookGenre);
                 newBook.setBookDescription(bookDescription);
 
-                // create new intent and put in book object
-                Intent newIntent = new Intent(this, AddBookActivity.class);
-                newIntent.putExtra("Book", newBook);
+                System.out.println("Did the thing");
 
-                startActivity(newIntent);
+                // create new intent and put in book object
+                Intent newIntent = new Intent();
+                newIntent.putExtra("result", newBook);
+                setResult(RESULT_OK, newIntent);
                 finish();
 
-                System.out.println("Pressed it!");
             default:
                 return super.onOptionsItemSelected(item);
         }

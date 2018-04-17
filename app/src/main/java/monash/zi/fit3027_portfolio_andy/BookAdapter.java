@@ -16,16 +16,20 @@ import java.util.ArrayList;
 public class BookAdapter extends BaseAdapter {
     private Context currentContext;
     private ArrayList<Book> bookArrayList;
+
     public BookAdapter(Context con, ArrayList<Book> book) {
         currentContext = con;
         bookArrayList = book;
     }
     @Override
     public int getCount() { return bookArrayList.size(); }
+
     @Override
     public Object getItem(int i) { return bookArrayList.get(i); }
+
     @Override
     public long getItemId(int i) { return i; }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         // Check if view already exists. If not inflate it
