@@ -11,12 +11,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class BooklistActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class BooklistActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, AdapterView.OnItemLongClickListener {
     FloatingActionButton addBookFAB;
 
     // Unique Identifier for receiving activity result
@@ -26,12 +28,18 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
     private BookAdapter adapter;
     private ArrayList<Book> bookArrayList;
     private SearchView searchView;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booklist);
 
+        // Get db Handler and values from database
+        databaseHelper = new DatabaseHelper(getApplicationContext());
+        bookArrayList = new ArrayList<>(databaseHelper.getAllBooks().values());
+
+        // initialize FAB
         addBookFAB = findViewById(R.id.gotoAddBookFAB);
         addBookFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +56,7 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
         // Create Adapter and associate it with our BookList
         adapter = new BookAdapter(this, bookArrayList);
         listView.setAdapter(adapter);
+        listView.setOnItemLongClickListener(this);
         updateListCount();
 
     }
@@ -85,13 +94,27 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if(requestCode == ADD_BOOK_REQUEST) {
             if(resultCode == RESULT_OK) {
+                boolean canAddBook = true;
                 // Get the person object from the intent and add it to our list
-                Book newBook = data.getParcelableExtra("result");
-                bookArrayList.add(newBook);
-                adapter.notifyDataSetChanged();
-                updateListCount();
+                 Book newBook = data.getParcelableExtra("result");
+                // bookArrayList.add(newBook);
+                // adapter.notifyDataSetChanged();
+                // updateListCount();
+
+                //check for existing book
+                for (Book book : bookArrayList)
+                {
+                    if (newBook.getBookTitle().equals(book.getBookTitle())) {
+                        Toast.makeText(BooklistActivity.this,
+                                "Book already exists in database",
+                                Toast.LENGTH_SHORT).show();
+                        canAddBook = false;
+                    }
+                }
+
                 Snackbar.make(findViewById(R.id.bookListActivityCoordLayoutView), "Successfully created book.",
                         Snackbar.LENGTH_SHORT).show();
             }
@@ -112,7 +135,11 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
     @Override
     public boolean onQueryTextChange(String s) {
         adapter.getFilter().filter(s);
-        System.out.println("Trying to filter for: " + s);
         return true;
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        return false;
     }
 }

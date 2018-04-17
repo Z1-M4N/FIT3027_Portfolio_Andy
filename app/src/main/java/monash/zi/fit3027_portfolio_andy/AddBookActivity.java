@@ -70,8 +70,6 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
                 String bookGenre = bookGenreText.getText().toString();
                 String bookDescription = bookDescriptionText.getText().toString();
 
-                // run validation
-
                 // set Book to user input
                 newBook = new Book();
                 newBook.setBookTitle(bookTitle);
@@ -84,6 +82,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
                 newBook.setBookDescription(bookDescription);
 
                 try {
+                    // Since the ISBN is used as the ID, run a simple validation
                     newBook.get_id();
 
                     // create new intent and put in book object
@@ -94,7 +93,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 catch (Exception e) {
                         System.out.println("Invalid ISBN");
-                        Snackbar.make(findViewById(R.id.addBookActivityCoordLayoutView), "Invalid ISBN identifier. (Must be numeric)",
+                        Snackbar.make(findViewById(R.id.addBookActivityCoordLayoutView), "Invalid ISBN identifier (Must be numeric).",
                                 Snackbar.LENGTH_SHORT).show();
                 }
 
