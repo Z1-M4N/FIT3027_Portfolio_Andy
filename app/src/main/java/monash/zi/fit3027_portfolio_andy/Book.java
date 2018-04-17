@@ -8,6 +8,31 @@ import android.os.Parcelable;
  */
 
 public class Book implements Parcelable{
+
+    // Database Constants
+    public static final String TABLE_NAME = "Books";
+    public static final String COLUMN_TITLE = "Title";
+    public static final String COLUMN_ISBN = "ISBN";
+    public static final String COLUMN_AUTHOR = "Author";
+    public static final String COLUMN_PUBLISHER = "Publisher";
+    public static final String COLUMN_EDITION = "Edition";
+    public static final String COLUMN_PUBLICATIONYEAR = "Publication_Year";
+    public static final String COLUMN_GENRE = "Genre";
+    public static final String COLUMN_DESCRIPTION = "Description";
+
+    // Table create statement
+    public static final String CREATE_STATEMENT =
+            "CREATE TABLE " + TABLE_NAME + "(" +
+                    COLUMN_TITLE + " TEXT NOT NULL, " +
+                    COLUMN_ISBN + " TEXT NOT NULL, " +
+                    COLUMN_AUTHOR + " TEXT NOT NULL, " +
+                    COLUMN_PUBLISHER + " TEXT NOT NULL, " +
+                    COLUMN_EDITION + " TEXT NOT NULL, " +
+                    COLUMN_PUBLICATIONYEAR + " TEXT NOT NULL, " +
+                    COLUMN_GENRE + " TEXT NOT NULL, " +
+                    COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
+                    ");";
+
     private String bookTitle;
     private String bookISBN;
     private String bookAuthor;
@@ -26,6 +51,17 @@ public class Book implements Parcelable{
         this.bookPublicationYear = in.readString();
         this.bookGenre = in.readString();
         this.bookDescription = in.readString();
+    }
+
+    public Book(String bookTitle, String bookISBN, String bookAuthor, String bookPublisher, String bookEdition, String bookPublicationYear, String bookGenre, String bookDescription) {
+        this.bookTitle = bookTitle;
+        this.bookISBN = bookISBN;
+        this.bookAuthor = bookAuthor;
+        this.bookPublisher = bookPublisher;
+        this.bookEdition = bookEdition;
+        this.bookPublicationYear = bookPublicationYear;
+        this.bookGenre = bookGenre;
+        this.bookDescription = bookDescription;
     }
 
     // An example book
@@ -145,6 +181,11 @@ public class Book implements Parcelable{
 
     public void setBookDescription(String bookDescription) {
         this.bookDescription = bookDescription;
+    }
+
+    // id is set via ISBN
+    public long get_id() {
+        return Long.parseLong(this.getBookISBN());
     }
 
     public String getBookSummary() {

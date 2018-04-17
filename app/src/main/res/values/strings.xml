@@ -14,4 +14,5 @@
     <string name="search_book">Search</string>
     <string name="add_book">Add Book</string>
     <string name="list_book">Book List</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

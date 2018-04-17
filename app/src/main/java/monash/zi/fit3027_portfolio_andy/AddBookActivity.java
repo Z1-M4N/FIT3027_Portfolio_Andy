@@ -1,14 +1,13 @@
 package monash.zi.fit3027_portfolio_andy;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 public class AddBookActivity extends AppCompatActivity implements View.OnClickListener{
@@ -84,13 +83,20 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
                 newBook.setBookGenre(bookGenre);
                 newBook.setBookDescription(bookDescription);
 
-                System.out.println("Did the thing");
+                try {
+                    newBook.get_id();
 
-                // create new intent and put in book object
-                Intent newIntent = new Intent();
-                newIntent.putExtra("result", newBook);
-                setResult(RESULT_OK, newIntent);
-                finish();
+                    // create new intent and put in book object
+                    Intent newIntent = new Intent();
+                    newIntent.putExtra("result", newBook);
+                    setResult(RESULT_OK, newIntent);
+                    finish();
+                }
+                catch (Exception e) {
+                        System.out.println("Invalid ISBN");
+                        Snackbar.make(findViewById(R.id.addBookActivityCoordLayoutView), "Invalid ISBN identifier. (Must be numeric)",
+                                Snackbar.LENGTH_SHORT).show();
+                }
 
             default:
                 return super.onOptionsItemSelected(item);

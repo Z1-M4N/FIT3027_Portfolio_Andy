@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,9 +32,6 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booklist);
 
-        // Initialize Search(?) and FAB
-        // searchBook = findViewById(R.id.searchBookAction);
-
         addBookFAB = findViewById(R.id.gotoAddBookFAB);
         addBookFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +45,7 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
         bookArrayList = new ArrayList<>();
         listView = findViewById(R.id.bookListView);
 
-        // Create Adapter and associate it with our PersonList
+        // Create Adapter and associate it with our BookList
         adapter = new BookAdapter(this, bookArrayList);
         listView.setAdapter(adapter);
         updateListCount();
@@ -94,6 +92,8 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
                 bookArrayList.add(newBook);
                 adapter.notifyDataSetChanged();
                 updateListCount();
+                Snackbar.make(findViewById(R.id.bookListActivityCoordLayoutView), "Successfully created book.",
+                        Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -112,6 +112,7 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
     @Override
     public boolean onQueryTextChange(String s) {
         adapter.getFilter().filter(s);
+        System.out.println("Trying to filter for: " + s);
         return true;
     }
 }

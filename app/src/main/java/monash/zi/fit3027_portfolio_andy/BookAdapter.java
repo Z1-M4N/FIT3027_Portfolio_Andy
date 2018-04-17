@@ -18,20 +18,20 @@ import java.util.ArrayList;
 public class BookAdapter extends BaseAdapter implements Filterable{
     private Context currentContext;
     private ArrayList<Book> bookArrayList;
-    private ArrayList<String> filteredBookTitleList;
+    private ArrayList<Book> filteredBookList;
     private BookFilter filter;
 
     public BookAdapter(Context con, ArrayList<Book> book) {
         currentContext = con;
         bookArrayList = book;
-        filteredBookTitleList = null;
+        filteredBookList = bookArrayList;
 
     }
     @Override
-    public int getCount() { return bookArrayList.size(); }
+    public int getCount() { return filteredBookList.size(); }
 
     @Override
-    public Object getItem(int i) { return bookArrayList.get(i); }
+    public Object getItem(int i) { return filteredBookList.get(i); }
 
     @Override
     public long getItemId(int i) { return i; }
@@ -47,8 +47,8 @@ public class BookAdapter extends BaseAdapter implements Filterable{
         // Assign values to the TextViews using Person Object
         TextView bookItemView = view.findViewById(R.id.bookItemTitleTextView);
         TextView bookAuthorView = view.findViewById(R.id.bookItemAuthorTextView);
-        bookItemView.setText(bookArrayList.get(i).getBookTitle());
-        bookAuthorView.setText(bookArrayList.get(i).getBookAuthor());
+        bookItemView.setText(filteredBookList.get(i).getBookTitle());
+        bookAuthorView.setText(filteredBookList.get(i).getBookAuthor());
 
         return view;
     }
@@ -84,7 +84,7 @@ public class BookAdapter extends BaseAdapter implements Filterable{
         }
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredBookTitleList = (ArrayList<String>) results.values;
+            filteredBookList = (ArrayList<Book>) results.values;
             notifyDataSetChanged();
         }
     }
