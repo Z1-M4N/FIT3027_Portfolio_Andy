@@ -30,7 +30,7 @@ public class Book implements Parcelable{
                     COLUMN_EDITION + " TEXT NOT NULL, " +
                     COLUMN_PUBLICATIONYEAR + " TEXT NOT NULL, " +
                     COLUMN_GENRE + " TEXT NOT NULL, " +
-                    COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
+                    COLUMN_DESCRIPTION + " TEXT NOT NULL " +
                     ");";
 
     private String bookTitle;

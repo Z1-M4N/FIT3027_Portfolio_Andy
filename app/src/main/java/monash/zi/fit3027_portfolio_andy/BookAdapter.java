@@ -44,7 +44,7 @@ public class BookAdapter extends BaseAdapter implements Filterable{
             // Create a list item based off layout definition
             view = inflater.inflate(R.layout.list_book_item, null);
         }
-        // Assign values to the TextViews using Person Object
+        // Assign values to the TextViews using Book Object
         TextView bookItemView = view.findViewById(R.id.bookItemTitleTextView);
         TextView bookAuthorView = view.findViewById(R.id.bookItemAuthorTextView);
         bookItemView.setText(filteredBookList.get(i).getBookTitle());

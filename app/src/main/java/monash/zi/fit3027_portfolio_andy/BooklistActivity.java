@@ -1,7 +1,9 @@
 package monash.zi.fit3027_portfolio_andy;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,7 +20,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class BooklistActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, AdapterView.OnItemLongClickListener {
+public class BooklistActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     FloatingActionButton addBookFAB;
 
     // Unique Identifier for receiving activity result
@@ -56,7 +58,10 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
         // Create Adapter and associate it with our BookList
         adapter = new BookAdapter(this, bookArrayList);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
+
         updateListCount();
 
     }
@@ -98,8 +103,9 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
         if(requestCode == ADD_BOOK_REQUEST) {
             if(resultCode == RESULT_OK) {
                 boolean canAddBook = true;
-                // Get the person object from the intent and add it to our list
+                // Get the Book object from the intent and add it to our list
                  Book newBook = data.getParcelableExtra("result");
+
                 // bookArrayList.add(newBook);
                 // adapter.notifyDataSetChanged();
                 // updateListCount();
@@ -115,14 +121,29 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
                     }
                 }
 
+                // If Book doesn't exist then add it
+                if (canAddBook)
+                {
+                    databaseHelper.addBook(newBook);
+                    bookArrayList.add(newBook);
+
+                    adapter.notifyDataSetChanged();
+                    updateListCount();
+
+                    Toast.makeText(BooklistActivity.this,
+                            "Book has been added!",
+                            Toast.LENGTH_SHORT).show();
+                }
+
                 Snackbar.make(findViewById(R.id.bookListActivityCoordLayoutView), "Successfully created book.",
                         Snackbar.LENGTH_SHORT).show();
             }
         }
     }
-    // Function to initialize default values for the person list (Change this later)
+
+    // Function to initialize default values for the Book list (Change this later)
     private void updateListCount() {
-        // Get total size of person list & set title
+        // Get total size of Book list & set title
         int numPeople = bookArrayList.size();
         setTitle("Number of Books: " + numPeople);
     }
@@ -139,7 +160,45 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+    public void onItemClick(AdapterView<?> parent, View view,
+                            int position, long id) {
+        // TODO Auto-generated method stub
+
+        Toast.makeText(BooklistActivity.this, bookArrayList.get(position).getBookTitle(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int
+            position, long l) {
+        // Build a dialog to delete item
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(view.getContext());
+        builder.setTitle("Remove Book?");
+        builder.setMessage("Are you sure you wish to remove this Book?");
+        builder.setPositiveButton("Delete",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Remove Book from list and database
+                        Book book = bookArrayList.remove(position);
+                        databaseHelper.deleteBook(book);
+
+                        // Update ListView
+                        adapter.notifyDataSetChanged();
+                        updateListCount();
+
+                        Toast.makeText(getBaseContext(),
+                                "Book has been deleted",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.create().show();
         return false;
     }
 }
