@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
 public class DatabaseHelper extends SQLiteOpenHelper{
 
     // Set database and table properties
-    public static final String DATABASE_NAME = "books.sqlite";
+    public static final String DATABASE_NAME = "booksLibrary";
     public static final int DATABASE_VERSION = 1;
 
     public DatabaseHelper(Context context) {
@@ -32,6 +32,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Book.TABLE_NAME);
         onCreate(sqLiteDatabase);
+    }
+
+    private void createDefault() {
+        Book newBook = new Book();
+        newBook.setBookTitle("Example Book Title");
+        newBook.setBookAuthor("Example Book Author");
+        newBook.setBookISBN("1234567890");
+
+        addBook(newBook);
     }
 
     public void addBook(Book book) {
@@ -82,6 +91,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         cursor.close();
         sqLiteDatabase.close();
+
+        if (books.size() == 0) {
+            createDefault();
+            books = getAllBooks();
+        }
 
         return books;
     }

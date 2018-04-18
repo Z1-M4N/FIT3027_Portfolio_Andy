@@ -23,8 +23,8 @@ public class Book implements Parcelable{
     // Table create statement
     public static final String CREATE_STATEMENT =
             "CREATE TABLE " + TABLE_NAME + "(" +
+                    COLUMN_ISBN + " INTEGER PRIMARY KEY NOT NULL, " +
                     COLUMN_TITLE + " TEXT NOT NULL, " +
-                    COLUMN_ISBN + " TEXT NOT NULL, " +
                     COLUMN_AUTHOR + " TEXT NOT NULL, " +
                     COLUMN_PUBLISHER + " TEXT NOT NULL, " +
                     COLUMN_EDITION + " TEXT NOT NULL, " +
@@ -190,7 +190,7 @@ public class Book implements Parcelable{
 
     public String getBookSummary() {
         // Formatting the ISBN was considered, but not included for the sake of simplicity,
-        // and assumption of user input of a 13-digit number.
+        // and assumption of user input of a 10-digit number.
 
         return String.format(
                 "Name: %s\n" +

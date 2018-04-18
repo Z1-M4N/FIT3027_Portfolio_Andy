@@ -41,6 +41,8 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
         databaseHelper = new DatabaseHelper(getApplicationContext());
         bookArrayList = new ArrayList<>(databaseHelper.getAllBooks().values());
 
+        System.out.println(bookArrayList.toString());
+
         // initialize FAB
         addBookFAB = findViewById(R.id.gotoAddBookFAB);
         addBookFAB.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +54,7 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
         });
 
         // Initialize the Book List
-        bookArrayList = new ArrayList<>();
+//        bookArrayList = new ArrayList<>();
         listView = findViewById(R.id.bookListView);
 
         // Create Adapter and associate it with our BookList
@@ -98,6 +100,9 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
     // Overridden method to get results from any activity launched from this activity previously
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // refresh from a book edit
+
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == ADD_BOOK_REQUEST) {
@@ -163,7 +168,8 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
     public void onItemClick(AdapterView<?> parent, View view,
                             int position, long id) {
         // TODO Auto-generated method stub
-
+        // start a new activity,
+        // parcelable pass into the new activity
         Toast.makeText(BooklistActivity.this, bookArrayList.get(position).getBookTitle(), Toast.LENGTH_SHORT).show();
     }
 
