@@ -22,6 +22,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     EditText bookDescriptionText;
 
     Book newBook;
+    Book editBook = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,27 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
         bookPublicationYearText = findViewById(R.id.bookPublicationYearInput);
         bookGenreText = findViewById(R.id.bookGenreInput);
         bookDescriptionText = findViewById(R.id.bookDescriptionInput);
+
+        try {
+            editBook = getIntent().getParcelableExtra("bookToEdit");
+
+            if (editBook != null) {
+                setTitle("Edit Book");
+
+                bookTitleText.setText(editBook.getBookTitle());
+                bookISBNText.setText(editBook.getBookISBN());
+                bookAuthorText.setText(editBook.getBookAuthor());
+                bookPublisherText.setText(editBook.getBookPublisher());
+                bookEditionText.setText(editBook.getBookEdition());
+                bookPublicationYearText.setText(editBook.getBookPublisher());
+                bookGenreText.setText(editBook.getBookGenre());
+                bookDescriptionText.setText(editBook.getBookDescription());
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Caught successfully. (adding a book normally). Emptying text.");
+            editBook = null;
+        }
     }
 
     @Override

@@ -25,12 +25,15 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
 
     // Unique Identifier for receiving activity result
     public static final int ADD_BOOK_REQUEST = 1;
+    public static final int UPDATE_BOOK_REQUEST = 2;
 
     private ListView listView;
     private BookAdapter adapter;
     private ArrayList<Book> bookArrayList;
     private SearchView searchView;
     private DatabaseHelper databaseHelper;
+
+    private Book prevBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,37 +106,66 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
         // refresh from a book edit
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == ADD_BOOK_REQUEST) {
-            if(resultCode == RESULT_OK) {
-                boolean canAddBook = true;
-                // Get the Book object from the intent and add it to our list
-                 Book newBook = data.getParcelableExtra("result");
+        switch (requestCode) {
+            case ADD_BOOK_REQUEST : {
+                if(resultCode == RESULT_OK) {
+                    boolean canAddBook = true;
+                    // Get the Book object from the intent and add it to our list
+                    Book newBook = data.getParcelableExtra("result");
 
-                //check for existing book through ISBN
-                for (Book book : bookArrayList)
-                {
-                    if (newBook.getBookISBN().equals(book.getBookISBN())) {
-                        Toast.makeText(BooklistActivity.this,
-                                "Book already exists in database",
-                                Toast.LENGTH_SHORT).show();
-                        canAddBook = false;
+                    //check for existing book through ISBN
+                    for (Book book : bookArrayList)
+                    {
+                        if (newBook.getBookISBN().equals(book.getBookISBN())) {
+                            Toast.makeText(BooklistActivity.this,
+                                    "Book already exists in database",
+                                    Toast.LENGTH_SHORT).show();
+                            canAddBook = false;
+                        }
+                    }
+
+                    // If book doesn't exist (id'd by ISBN) then add it
+                    if (canAddBook)
+                    {
+                        databaseHelper.addBook(newBook);
+                        bookArrayList.add(newBook);
+
+                        adapter.notifyDataSetChanged();
+                        updateListCount();
+
+                        Snackbar.make(findViewById(R.id.bookListActivityCoordLayoutView), "Successfully created book.",
+                                Snackbar.LENGTH_SHORT).show();
                     }
                 }
+            }
 
-                // If book doesn't exist (id'd by ISBN) then add it
-                if (canAddBook)
-                {
-                    databaseHelper.addBook(newBook);
-                    bookArrayList.add(newBook);
+            case UPDATE_BOOK_REQUEST : {
+                if(resultCode == RESULT_OK) {
+                    // Get the Book object from the intent and add it to our list
+                    Book newBook = data.getParcelableExtra("result");
 
-                    adapter.notifyDataSetChanged();
-                    updateListCount();
+                    // check for existing book through ISBN
+                    for (Book book : bookArrayList)
+                    {
+                        if (prevBook.getBookISBN().equals(book.getBookISBN())) {
 
-                    Snackbar.make(findViewById(R.id.bookListActivityCoordLayoutView), "Successfully created book.",
-                            Snackbar.LENGTH_SHORT).show();
+                            databaseHelper.updateBook(book, newBook);
+                            bookArrayList.remove(book);
+                            bookArrayList.add(newBook);
+
+                            adapter.notifyDataSetChanged();
+                            updateListCount();
+
+                            Toast.makeText(BooklistActivity.this,
+                                    "Book updated in database",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
         }
+
+
     }
 
     // Function to initialize default values for the Book list (Change this later)
@@ -157,20 +189,48 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view,
                             int position, long id) {
-        // TODO Auto-generated method stub
         // start a new activity,
         // parcelable pass into the new activity
+
+        Intent newIntent = new Intent(BooklistActivity.this, ViewBookActivity.class);
+        newIntent.putExtra("bookToView", bookArrayList.get(position));
+        startActivity(newIntent);
+
         Toast.makeText(BooklistActivity.this, bookArrayList.get(position).getBookTitle(), Toast.LENGTH_SHORT).show();
     }
 
+    // Currently set a Longclick to delete a book.
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int
             position, long l) {
         // Build a dialog to delete item
         AlertDialog.Builder builder =
                 new AlertDialog.Builder(view.getContext());
-        builder.setTitle("Remove Book?");
-        builder.setMessage("Are you sure you wish to remove this Book?");
+        builder.setTitle("Edit or Remove Book");
+        builder.setMessage("Do you wish to Edit or Remove this Book?");
+        builder.setNeutralButton("Edit",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Remove Book from list and database
+                        Book book = bookArrayList.get(position);
+
+                        prevBook = bookArrayList.get(position);
+
+                        // Start activity with edit intent
+                        Intent editIntent = new Intent(BooklistActivity.this, AddBookActivity.class);
+                        editIntent.putExtra("bookToEdit", book);
+                        startActivityForResult(editIntent, UPDATE_BOOK_REQUEST);
+
+                        // Update ListView
+                        adapter.notifyDataSetChanged();
+                        updateListCount();
+
+                        Toast.makeText(getBaseContext(),
+                                "Book has been updated.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
         builder.setPositiveButton("Delete",
                 new DialogInterface.OnClickListener() {
                     @Override

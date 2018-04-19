@@ -3,6 +3,8 @@ package monash.zi.fit3027_portfolio_andy;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Objects;
+
 /**
  * Created by Zi on 01-Mar-18.
  */
@@ -120,7 +122,13 @@ public class Book implements Parcelable{
     }
 
     public String getBookTitle() {
-        return bookTitle;
+        if (Objects.equals(this.bookTitle, "")) {
+            return "Not available";
+        }
+        else
+        {
+            return bookTitle;
+        }
     }
 
     public void setBookTitle(String bookTitle) {

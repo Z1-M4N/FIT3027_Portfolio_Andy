@@ -82,7 +82,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="number"
                 android:selectAllOnFocus="false"
                 android:singleLine="false"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -128,7 +128,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="number" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -147,7 +147,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="number" />
 
             <TextView
                 android:id="@+id/textView7"

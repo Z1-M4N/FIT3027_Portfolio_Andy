@@ -70,12 +70,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     }
 
-//    public Book getBook(String title) {
-//        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-//
-//        Cursor cursor = sqLiteDatabase.query();
-//    }
-
     public HashMap<Long, Book> getAllBooks() {
         HashMap<Long, Book> books = new LinkedHashMap<>();
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -100,6 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         cursor.close();
         sqLiteDatabase.close();
 
+        // If the database is empty, add an example book. Simple to comment out if need be.
         if (books.size() == 0) {
             createDefault();
             books = getAllBooks();
@@ -112,7 +107,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return 1;
     }
 
-    public int updateBook(Book book) {
+    public int updateBook(Book delBook, Book newBook) {
+        // delete book, and then add new book
+        deleteBook(delBook);
+        addBook(newBook);
         return 1;
     }
 
