@@ -9,9 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-/**
- * Created by unkno on 09-Mar-18.
- */
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
@@ -39,6 +36,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         newBook.setBookTitle("Example Book Title");
         newBook.setBookAuthor("Example Book Author");
         newBook.setBookISBN("1234567890");
+        newBook.setBookPublisher("Example Publisher");
+        newBook.setBookEdition("Example Edition");
+        newBook.setBookPublicationYear("Example Publication Year");
+        newBook.setBookGenre("Example Genre");
+        newBook.setBookDescription("This is a great description right here. The best description, with the best words.");
 
         addBook(newBook);
     }
@@ -57,9 +59,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         values.put(Book.COLUMN_GENRE, book.getBookGenre());
         values.put(Book.COLUMN_DESCRIPTION, book.getBookDescription());
 
-        // Add row
-        sqLiteDatabase.insert(Book.TABLE_NAME, null, values);
-        sqLiteDatabase.close();
+        try {
+            // Add row
+            sqLiteDatabase.insert(Book.TABLE_NAME, null, values);
+            sqLiteDatabase.close();
+        }
+        catch (Exception e) {
+
+        }
+
     }
 
 //    public Book getBook(String title) {
@@ -77,8 +85,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         while (cursor.moveToNext()) {
             // Getting the different attributes of a book
             Book book = new Book(
-                    cursor.getString(0),
                     cursor.getString(1),
+                    cursor.getString(0),
                     cursor.getString(2),
                     cursor.getString(3),
                     cursor.getString(4),
@@ -86,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     cursor.getString(6),
                     cursor.getString(7)
             );
-            books.put(Long.parseLong(book.getBookISBN()),book);
+            books.put(book.get_id(),book);
         }
 
         cursor.close();

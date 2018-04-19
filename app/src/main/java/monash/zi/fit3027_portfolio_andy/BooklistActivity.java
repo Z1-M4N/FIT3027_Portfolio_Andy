@@ -65,7 +65,6 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
         listView.setOnItemLongClickListener(this);
 
         updateListCount();
-
     }
 
     // Create our menu
@@ -102,7 +101,6 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         // refresh from a book edit
-
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == ADD_BOOK_REQUEST) {
@@ -111,14 +109,10 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
                 // Get the Book object from the intent and add it to our list
                  Book newBook = data.getParcelableExtra("result");
 
-                // bookArrayList.add(newBook);
-                // adapter.notifyDataSetChanged();
-                // updateListCount();
-
-                //check for existing book
+                //check for existing book through ISBN
                 for (Book book : bookArrayList)
                 {
-                    if (newBook.getBookTitle().equals(book.getBookTitle())) {
+                    if (newBook.getBookISBN().equals(book.getBookISBN())) {
                         Toast.makeText(BooklistActivity.this,
                                 "Book already exists in database",
                                 Toast.LENGTH_SHORT).show();
@@ -126,7 +120,7 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
                     }
                 }
 
-                // If Book doesn't exist then add it
+                // If book doesn't exist (id'd by ISBN) then add it
                 if (canAddBook)
                 {
                     databaseHelper.addBook(newBook);
@@ -135,13 +129,9 @@ public class BooklistActivity extends AppCompatActivity implements SearchView.On
                     adapter.notifyDataSetChanged();
                     updateListCount();
 
-                    Toast.makeText(BooklistActivity.this,
-                            "Book has been added!",
-                            Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.bookListActivityCoordLayoutView), "Successfully created book.",
+                            Snackbar.LENGTH_SHORT).show();
                 }
-
-                Snackbar.make(findViewById(R.id.bookListActivityCoordLayoutView), "Successfully created book.",
-                        Snackbar.LENGTH_SHORT).show();
             }
         }
     }
